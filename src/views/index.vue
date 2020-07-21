@@ -144,8 +144,16 @@
                 </div>
                 <CellGroup v-for="(shapeName, index) in savedShapeNames" :key="index">
                     <Cell :title="shapeName">
+                        <Icon type="ios-bookmark" slot="icon"/>
                         <span slot="extra" >
-                            <Button type="error" size="small" @click="deleteSavedShape(shapeName)">删除</Button>
+                            <Poptip
+                            transfer
+                            confirm
+                            placement="bottom-end"
+                            title="确定要删除快捷配置?"
+                            @on-ok="deleteSavedShape(shapeName)">
+                                <Button type="error" size="small">删除</Button>
+                            </Poptip>
                             <Button type="primary" size="small" @click="setSavedShape(shapeName)">应用</Button>
                         </span>
                     </Cell>
