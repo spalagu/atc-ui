@@ -50,7 +50,7 @@
             <TabPane label="参数配置" icon="md-cog">
                 <div style="margin: 0px 16px 16px 16px;">
                     <Button :disabled="!shaped" type="warning" size="small" @click="unSetShape">重置参数</Button>
-                    <Button type="info" size="small" @click="saveShape">保存为快捷配置</Button>
+                    <Button type="info" size="small" @click="openSaveShapeModel">保存为快捷配置</Button>
                     <Button type="primary" size="small" @click="setShape">更新配置</Button>
                 </div>
                 <Divider orientation="left">下行</Divider>
@@ -130,10 +130,26 @@
                     </Form>
                 </div>
             </TabPane>
-            <TabPane label="快捷配置" icon="md-bookmarks" :disabled="true">
+            <TabPane label="快捷配置" icon="md-link" :disabled="false">
                 <div style="margin: 0px 16px 16px 16px;">
                     <Button :disabled="!shaped" type="warning" size="small" @click="unSetShape">重置参数</Button>
+                    <Poptip
+                    transfer
+                    confirm
+                    placement="bottom-start"
+                    title="确定要清除全部快捷配置?"
+                    @on-ok="clearAllSavedShape">
+                        <Button type="error" size="small">清除全部</Button>
+                    </Poptip>
                 </div>
+                <CellGroup v-for="(shapeName, index) in savedShapeNames" :key="index">
+                    <Cell :title="shapeName">
+                        <span slot="extra" >
+                            <Button type="error" size="small" @click="deleteSavedShape(shapeName)">删除</Button>
+                            <Button type="primary" size="small" @click="setSavedShape(shapeName)">应用</Button>
+                        </span>
+                    </Cell>
+                </CellGroup>
             </TabPane>
         </Tabs>
         <Modal
@@ -146,6 +162,13 @@
                 <Button type="default" size="large" @click="cancelChangeDevice">取消</Button>
                 <Button type="primary" size="large" @click="changeDevice">确定</Button>
             </div>
+        </Modal>
+        <Modal
+        v-model="showSaveShapeModel"
+        title="保存快捷配置"
+        :styles="{top: '20px'}"
+        @on-ok="saveShape">
+            <Input v-model="currentShapeName" size="large" clearable placeholder="快捷配置名称" />
         </Modal>
     </Card>
 </template>
@@ -254,6 +277,9 @@
                     },
                 },
                 showChangeDeviceModel: false,
+                showSaveShapeModel: false,
+                currentShapeName: '我的配置',
+                savedShapeNames: [],
             };
         },
         methods: {
@@ -282,7 +308,40 @@
                 this.deviceIP = 'localhost';
                 this.getShape();
             },
+            openSaveShapeModel(){
+                this.showSaveShapeModel = true;
+            },
             saveShape(shapeName) {
+                localStorage.setItem(this.currentShapeName,JSON.stringify(this.shape))
+                this.currentShapeName = '我的配置'
+                this.updateSavedShapeNames()
+            },
+            setSavedShape(shapeName){
+                var savedShape=localStorage.getItem(shapeName)
+                if (savedShape){
+                    this.shape=JSON.parse(savedShape);
+                    this.setShape();
+                }else{
+                    this.$Message.error('应用快捷配置失败');
+                }
+            },
+            deleteSavedShape(shapeName){
+                localStorage.removeItem(shapeName);
+                this.updateSavedShapeNames()
+            },
+            updateSavedShapeNames(){
+                this.savedShapeNames=[]
+                var savedShapeNum = localStorage.length;
+                for (var i = 0; i < savedShapeNum; i++) {
+                    var savedShapeName = localStorage.key(i)
+                    if (savedShapeName != 'loglevel:webpack-dev-server'){
+                        this.savedShapeNames.push(savedShapeName)
+                    }
+                }
+            },
+            clearAllSavedShape(){
+                localStorage.clear();
+                this.updateSavedShapeNames();
             },
             getShape() {
                 const _this = this;
@@ -416,6 +475,7 @@
             },
         },
         mounted() {
+            this.updateSavedShapeNames()
             this.getShape()
         }
     }
