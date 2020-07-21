@@ -31,7 +31,7 @@
     }
 </style>
 <template>
-    <Card style="width:100%;height:100%" :padding=0>
+    <Card style="width:100%;height:100%;max-width:900px;margin-right:auto;margin-left:auto;" :padding=0>
         <p slot="title" v-if="shaped">
             <Icon type="md-phone-portrait" />
             {{deviceName}}
