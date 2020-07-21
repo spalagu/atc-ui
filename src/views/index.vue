@@ -49,9 +49,9 @@
         <Tabs>
             <TabPane label="参数配置" icon="md-cog">
                 <div style="margin: 0px 16px 16px 16px;">
-                    <Button :disabled="!shaped" type="warning" size="small" @click="unSetShape">重置参数</Button>
+                    <Button :disabled="!shaped" type="warning" size="small" @click="unSetShape">重置配置</Button>
                     <Button type="info" size="small" @click="openSaveShapeModel">保存为快捷配置</Button>
-                    <Button type="primary" size="small" @click="setShape">更新配置</Button>
+                    <Button type="primary" size="small" @click="setShape">应用配置</Button>
                 </div>
                 <Divider orientation="left">下行</Divider>
                 <div style="margin: 0px 16px 16px 16px;">
@@ -132,14 +132,14 @@
             </TabPane>
             <TabPane label="快捷配置" icon="md-link" :disabled="false">
                 <div style="margin: 0px 16px 16px 16px;">
-                    <Button :disabled="!shaped" type="warning" size="small" @click="unSetShape">重置参数</Button>
+                    <Button :disabled="!shaped" type="warning" size="small" @click="unSetShape">重置配置</Button>
                     <Poptip
                     transfer
                     confirm
                     placement="bottom-start"
                     title="确定要清除全部快捷配置?"
                     @on-ok="clearAllSavedShape">
-                        <Button type="error" size="small">清除全部</Button>
+                        <Button type="error" size="small">清除全部快捷配置</Button>
                     </Poptip>
                 </div>
                 <CellGroup v-for="(shapeName, index) in savedShapeNames" :key="index">
