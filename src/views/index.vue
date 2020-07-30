@@ -163,6 +163,7 @@
         <Modal
         v-model="showChangeDeviceModel"
         title="更换目标设备"
+        :closable="false"
         :styles="{top: '20px'}">
             <Input v-model="deviceIP" size="large" clearable placeholder="输入目标设备IP，例如192.168.100.2" />
             <div slot="footer">
@@ -174,6 +175,7 @@
         <Modal
         v-model="showSaveShapeModel"
         title="保存快捷配置"
+        :closable="false"
         :styles="{top: '20px'}"
         @on-ok="saveShape">
             <Input v-model="currentShapeName" size="large" clearable placeholder="快捷配置名称" />
